@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Display in Queue</title>
+    <style>
+        #vinContainer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+        .vinBox {
+            border: 1px solid #000;
+            margin: 10px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="vinContainer"></div>
+
+    <script>
+        // Replace these with your actual API URLs
+        const apiUrls = [
+            'http://localhost:8080/get-api-1',
+            'http://localhost:8080/get-api-2'
+        ];
+
+        window.onload = function() {
+            const vinContainer = document.getElementById('vinContainer');
+
+            apiUrls.forEach(url => {
+                fetch(url)
+                    .then(response => response.text())
+                    .then(data => {
+                        const vinBox = document.createElement('div');
+                        vinBox.className = 'vinBox';
+                        vinBox.textContent = data.split(',').join('\n');
+                        vinContainer.appendChild(vinBox);
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        };
+    </script>
+</body>
+</html>
