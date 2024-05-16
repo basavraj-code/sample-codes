@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+        }
+        .section {
+            border: 1px solid #ff0000;
+            margin: 10px;
+            padding: 10px;
+        }
+        .container {
+            display: flex;
+            align-items: center;
+        }
+        #vinContainer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+        .vinBox {
+            border: 1px solid #000;
+            margin: 10px;
+            padding: 10px;
+        }
+    </style>
+    <link rel="manifest" href="/manifest.json">
+</head>
+<body>
+
+<div class="section" id="section1">
+    <h2>Health</h2>
+    <div id="responseBox"></div>
+    <button onclick="fetchApiData()">Refresh</button>
+    <script>
+        // Replace with your actual API endpoint
+        var apiEndpoint = "http://localhost:8080/status";
+
+        function fetchApiData() {
+            fetch(apiEndpoint)
+            .then(response => response.json())
+            .then(data => {
+                var responseBox = document.getElementById('responseBox');
+                responseBox.innerHTML = JSON.stringify(data);
+
+                // Change the box color based on the "code" attribute
+                if (data.code === 'red') {
+                    responseBox.style.backgroundColor = 'red';
+                } else {
+                    responseBox.style.backgroundColor = 'green';
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</div>
+
+<div class="section" id="section2">
+    <h1>Upload Image</h1>
+    <input type="file" id="imageUpload" accept="image/*">
+    <canvas id="canvas" width="640" height="480"></canvas>
+    <div class="container">
+        <label for="dropdown">Clicked Image -(Minus)</label>
+        <select id="dropdown" style="margin-right: 10px;">
+            <option value="1" selected>1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+        <button id="upload">Upload</button>
+    </div>
+    <p id="response"></p>
+    <button onclick="uploadImage()">Refresh</button>
+    <script>
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+        var imageUpload = document.getElementById('imageUpload');
+        var dropdown = document.getElementById('dropdown');
+
+        // Trigger photo take
+        imageUpload.addEventListener("change", function() {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = new Image();
+                img.onload = function() {
+                    context.drawImage(img, 0, 0, 640, 480);
+                }
+                img.src = e.target.result;
+            }
+            reader.readAsDataURL(imageUpload.files[0]);
+        });
+
+        function uploadImage() {
+            var dataUrl = canvas.toDataURL('image/png');
+            var dropdownValue = dropdown.value;
+            fetch('http://localhost:8080/set?dropdownValue=' + dropdownValue', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/octet-stream'
+                },
+                body: dataURItoBlob(dataUrl)
+            })
+            .then(response => response.text())
+            .then(result => {
+                console.log('Success:', result);
+                // Display the result on the webpage
+                document.getElementById('response').textContent = 'QR value of given image is : ' + result;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Display the error on the webpage
+                document.getElementById('response').textContent = 'Error: ' + error;
+            });
+        }
+        document.getElementById("upload").addEventListener("click", uploadImage);
+        function dataURItoBlob(dataURI) {
+            var byteString = atob(dataURI.split(',')[1]);
+            var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+            var ab = new ArrayBuffer(byteString.length);
+            var ia = new Uint8Array(ab);
+            for (var i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+            return new Blob([ab], {type: mimeString});
+        }
+    </script>
+</div>
+
+<div class="section" id="section3">
+    <div id="vinContainer"></div>
+	<h2> Queue | </h2>
+    <button onclick="fetchVinData()">Refresh</button>
+    <script>
+        // Replace these with your actual API URLs
+        const apiUrls = [
+            'http://localhost:8080/queue'
+        ];
+
+        function fetchVinData() {
+            const vinContainer = document.getElementById('vinContainer');
+
+            apiUrls.forEach(url => {
+                fetch(url)
+                    .then(response => response.text())
+                    .then(data => {
+                        const vinBox = document.createElement('div');
+                        vinBox.className = 'vinBox';
+                        vinBox.textContent = data.split(',').join('\n');
+                        vinContainer.appendChild(vinBox);
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        };
+    </script>
+</div>
+
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }, function(err) {
+                console.log('ServiceWorker registration failed: ', err);
+            });
+        });
+    }
+</script>
+
+</body>
+</html>
