@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Remove the line below if you don't want to use TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+
+    <style>
+      .icon-placeholder {
+        width: 100px; /* Default size */
+        height: 100px; /* Default size */
+        fill: #bbb; /* Default color for elements */
+        stroke: #bbb; /* Default border color */
+      }
+
+      .vim {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+            background-color: #f9f9f9;
+            margin: auto;
+            margin-top: 50px;
+        }
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+      
+        input[type=range] {
+            width: 100%;
+        }
+
+        .left{
+            width: 60%;
+            margin-right: 10%;
+        }
+
+        .right{
+            width: 38%;
+            height: 400px;
+        }
+
+       
+    </style>
+  </head>
+
+  <!-- Change code below this line -->
+  <body class="bg-gradient-to-tr from-[bg-gradient-to-tr from-[#dcf0ff] to-[#0000ff]] to-[#f5fbff] flex justify-center items-center min-h-screen">
+    <div
+    class="bg-[#ecf7ff] text-[#181028] p-8 space-y-4 shadow-lg rounded-xl w-full max-w-3xl"
+    style="border: 10px solid #fff; box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1); border-radius: 0.75rem;">
+  
+      <div class="flex items-center justify-around">
+        <div class="left ">
+          <h2 class="text-3xl text-[#00288a] text-center mt-28 font-[700]">Your QR Code</h2>
+
+          <p class="text-sm pt-6 text-center">
+            Your QE code will be generated automatically
+          </p>
+
+          <div
+            class="flex gap-8 items-center justify-center border border-dashed border-gray-400 mt-28 p-4 rounded-full"
+          >
+            <i
+              class="fa fa-upload fa-beat bg-[#3dbcf9] rounded-full p-4 text-white"
+              style="--fa-animation-duration: 3s"
+              aria-hidden="true"
+            ></i>
+
+            <p class="font-medium text-lg text-gray-500">
+              <span class="text-[#3dbcf9]">Upload any file</span> (jpg, pdf, mp3, docx, pptx) 😎
+            </p>
+          </div>
+        </div>
+        <!-- #end left==== -->
+
+        <div class="right bg-[#00288a] rounded-3xl flex flex-col gap-4 justify-center items-center p-4 pl-8 pr-8">
+          <div class=" flex items-center justify-center">
+            <!-- <img class="w-44" src="/long-light.png" /> -->
+
+            <!-- SVG Image Placeholder Icon -->
+            <svg
+              class="icon-placeholder"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <!-- Rounded Border -->
+              <rect
+                x="1"
+                y="1"
+                width="22"
+                height="22"
+                rx="5"
+                ry="5"
+                stroke="#bbb"
+                stroke-width="2"
+                fill="none"
+              />
+              <!-- Mountain Shape -->
+              <polygon points="4,18 10,11 14,16 19,9 20,18" fill="#bbb" />
+              <!-- Sun/Moon Circle -->
+              <circle cx="16" cy="7" r="2" fill="#bbb" />
+            </svg>
+          </div>
+          <!-- #end image view===== -->
+
+
+          <div class="vinBox bg-[#113a9f] p-2 w-full rounded-xl mt-8 shadow-lg">
+            <div class="flex justify-between items-center text-white">
+                <p class="text-md ">VIN</p>
+                <p class="slider-value text-xl  font-bold" id="sliderValue">0</p>
+    
+            </div>
+          
+
+            <div class="slider-container">
+                <input type="range" min="0" max="5" value="0" step="1" class="slider" id="mySlider">
+               
+            </div>
+        </div>
+        <!-- #end vim===== -->
+
+        <button class="p-2 pl-4 pr-4 mt-2 bg-[#ff9b05] text-white rounded-xl shadow-lg">SUBMIT</button>
+
+        </div>
+        <!-- #end right==== -->
+      </div>
+    </div>
+    <!-- #end model==== -->
+
+
+    <script>
+        // Get the slider and the display element
+        const slider = document.getElementById('mySlider');
+        const sliderValue = document.getElementById('sliderValue');
+
+        // Update the display element when the slider value changes
+        slider.addEventListener('input', function() {
+            sliderValue.textContent = this.value;
+        });
+    </script>
+  </body>
+  <!-- Change code above this line -->
+</html>

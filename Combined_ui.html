@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Remove the line below if you don't want to use TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+
+    <style>
+      .icon-placeholder {
+        width: 100px; /* Default size */
+        height: 100px; /* Default size */
+        fill: #bbb; /* Default color for elements */
+        stroke: #bbb; /* Default border color */
+      }
+
+      .vim {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+            background-color: #f9f9f9;
+            margin: auto;
+            margin-top: 50px;
+        }
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+      
+        input[type=range] {
+            width: 100%;
+        }
+
+        .left{
+            width: 60%;
+            margin-right: 10%;
+        }
+
+        .right{
+            width: 38%;
+            height: 400px;
+        }
+        .hidden {
+  display: none;
+}
+
+.file-picker-button {
+  display: inline-block;
+  cursor: pointer;
+}
+       
+    </style>
+  </head>
+
+  <!-- Change code below this line -->
+  <body class="bg-gradient-to-tr from-[bg-gradient-to-tr from-[#dcf0ff] to-[#0000ff]] to-[#f5fbff] flex justify-center items-center min-h-screen">
+    <div
+    class="bg-[#ecf7ff] text-[#181028] p-8 space-y-4 shadow-lg rounded-xl w-full max-w-3xl"
+    style="border: 10px solid #fff; box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1); border-radius: 0.75rem;">
+  
+      <div class="flex items-center justify-around">
+        <div class="left ">
+          <h2 class="text-3xl text-[#00288a] text-center mt-28 font-[700]">Your QR Code</h2>
+
+          <p class="text-sm pt-6 text-center">
+            Your QE code will be processed automatically
+          </p>
+
+          <div
+            class="flex gap-8 items-center justify-center border border-dashed border-gray-400 mt-28 p-4 rounded-full"
+          >
+          <!-- <input type="file" id="imageUpload" accept="image/*" style="border:none;outline:none"/>
+            <i
+              class="fa fa-upload fa-beat bg-[#3dbcf9] rounded-full p-4 text-white"
+              style="--fa-animation-duration: 3s"
+              aria-hidden="true"
+            ></i> -->
+<!-- File input visually hidden -->
+<input type="file" id="imageUpload" accept="image/*" class="hidden" />
+
+<!-- Styled div acting as the file picker button -->
+<label for="imageUpload" class="file-picker-button">
+  <i class="fa fa-upload fa-beat bg-[#3dbcf9] rounded-full p-4 text-white" style="--fa-animation-duration: 3s" aria-hidden="true"></i>
+</label>
+            <p class="font-medium text-lg text-gray-500">
+              <span class="text-[#3dbcf9]">Upload any file</span> (jpg, pdf, mp3, docx, pptx) 😎
+            </p>
+          </div>
+        </div>
+        <!-- #end left==== -->
+
+        <div class="right bg-[#00288a] rounded-3xl flex flex-col gap-4 justify-center items-center p-4 pl-8 pr-8">
+          <div class=" flex items-center justify-center rounded-xl  w-full h-full mt-4" style="border: 1px solid #bbb;">
+            <canvas id="canvas" width="100%" height="100%" 
+            class="rounded-xl"></canvas>
+
+            <!-- SVG Image Placeholder Icon -->
+            <!-- <svg
+              class="icon-placeholder"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+             
+              <rect
+                x="1"
+                y="1"
+                width="22"
+                height="22"
+                rx="5"
+                ry="5"
+                stroke="#bbb"
+                stroke-width="2"
+                fill="none"
+              />
+              
+              <polygon points="4,18 10,11 14,16 19,9 20,18" fill="#bbb" />
+             
+              <circle cx="16" cy="7" r="2" fill="#bbb" />
+            </svg> -->
+          </div>
+          <!-- #end image view===== -->
+
+
+          <div class="vinBox bg-[#113a9f] p-2 pb-4 w-full rounded-xl mt-2 shadow-lg">
+            <div class="flex justify-between items-center text-white">
+                <p class="text-md ">VIN</p>
+                <p class="slider-value text-xl  font-bold" id="sliderValue">0</p>
+    
+            </div>
+          
+
+            <div class="slider-container">
+                <input type="range" min="0" max="5" value="0" step="1" class="slider" id="mySlider">
+               
+            </div>
+        </div>
+        <!-- #end vim===== -->
+       
+        <button class="p-2 pl-4 pr-4 bg-[#ff9b05] text-white rounded-xl shadow-lg">SUBMIT
+            <i class="fa-solid fa-download fa-fade" style="--fa-animation-duration: 2s; --fa-fade-opacity: 0.6;"></i>
+        </button>
+        <p id="response"></p>
+        <!-- # script================== -->
+        <script>
+            var canvas = document.getElementById('canvas');
+            var context = canvas.getContext('2d');
+            var imageUpload = document.getElementById('imageUpload');
+            var dropdown = document.getElementById('dropdown');
+    
+            // Trigger photo take
+            imageUpload.addEventListener("change", function() {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var img = new Image();
+                    img.onload = function() {
+                        context.clearRect(0, 0, canvas.width, canvas.height);
+                        context.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    }
+                    img.src = e.target.result;
+                }
+                reader.readAsDataURL(imageUpload.files[0]);
+            });
+    
+            function uploadImage() {
+                var dataUrl = canvas.toDataURL('image/png');
+                var dropdownValue = dropdown.value;
+                fetch('' + dropdownValue, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/octet-stream'
+                    },
+                    body: dataURItoBlob(dataUrl)
+                })
+                .then(response => response.text())
+                .then(result => {
+                    console.log('Success:', result);
+                    // Display the result on the webpage
+                    document.getElementById('response').textContent = 'VIN of given image is : ' + result;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Display the error on the webpage
+                    document.getElementById('response').textContent = 'Error: ' + error;
+                });
+            }
+            document.getElementById("upload").addEventListener("click", uploadImage);
+            function dataURItoBlob(dataURI) {
+                var byteString = atob(dataURI.split(',')[1]);
+                var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+                var ab = new ArrayBuffer(byteString.length);
+                var ia = new Uint8Array(ab);
+                for (var i = 0; i < byteString.length; i++) {
+                    ia[i] = byteString.charCodeAt(i);
+                }
+                return new Blob([ab], {type: mimeString});
+            }
+        </script>
+        </div>
+        <!-- #end right==== -->
+      </div>
+    </div>
+    <!-- #end model==== -->
+
+
+    <script>
+        // Get the slider and the display element
+        const slider = document.getElementById('mySlider');
+        const sliderValue = document.getElementById('sliderValue');
+
+        // Update the display element when the slider value changes
+        slider.addEventListener('input', function() {
+            sliderValue.textContent = this.value;
+        });
+    </script>
+  </body>
+  <!-- Change code above this line -->
+</html>
