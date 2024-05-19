@@ -69,6 +69,37 @@
   
       <div class="flex items-center justify-around">
         <div class="left ">
+
+          <div class="section" id="section1">
+            <h2 class="text-[#70e000] font-bold">Iphone Health</h2>
+            <div id="responseBox"></div>
+            <button onclick="fetchApiData()" class="bg-[#80ed99] shadow-md p-2 pl-4 pr-4 rounded-xl text-white">Refresh 
+              <i class="fa fa-refresh" aria-hidden="true"></i>
+            </button>
+            <script>
+                // Replace with your actual API endpoint
+                var apiEndpoint = "";
+        
+                function fetchApiData() {
+                    fetch(apiEndpoint)
+                    .then(response => response.json())
+                    .then(data => {
+                        var responseBox = document.getElementById('responseBox');
+                        responseBox.innerHTML = JSON.stringify(data);
+        
+                        // Change the box color based on the "code" attribute
+                        if (data.code === 'red') {
+                            responseBox.style.backgroundColor = 'red';
+                        } else {
+                            responseBox.style.backgroundColor = 'green';
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+                }
+            </script>
+        </div>
           <h2 class="text-3xl text-[#00288a] text-center mt-28 font-[700]">Your QR Code</h2>
 
           <p class="text-sm pt-6 text-center">
@@ -95,6 +126,38 @@
               <span class="text-[#3dbcf9]">Upload any file</span> (jpg, pdf, mp3, docx, pptx) 😎
             </p>
           </div>
+
+          <hr>
+
+          <div class="section mt-4" id="section3">
+            <div id="vinContainer"></div>
+          <h2 class="text-[#3d405b] font-bold" >Next 5 vin's in the Queue  </h2>
+            <button onclick="fetchVinData()" class="bg-[#90e0ef] shadow-sm p-2 pl-4 pr-4 rounded-xl text-white">Refresh 
+              <i class="fa fa-refresh" aria-hidden="true"></i>
+         </button>
+            <script>
+                // Replace these with your actual API URLs
+                const apiUrls = [
+                    ''
+                ];
+        
+                function fetchVinData() {
+                    const vinContainer = document.getElementById('vinContainer');
+        
+                    apiUrls.forEach(url => {
+                        fetch(url)
+                            .then(response => response.text())
+                            .then(data => {
+                                const vinBox = document.createElement('div');
+                                vinBox.className = 'vinBox';
+                                vinBox.textContent = data.split(',').join('\n');
+                                vinContainer.appendChild(vinBox);
+                            })
+                            .catch(error => console.error('Error:', error));
+                    });
+                };
+            </script>
+        </div>
         </div>
         <!-- #end left==== -->
 
@@ -145,7 +208,7 @@
         </div>
         <!-- #end vim===== -->
        
-        <button class="p-2 pl-4 pr-4 bg-[#ff9b05] text-white rounded-xl shadow-lg">SUBMIT
+        <button id="upload" class="p-2 pl-4 pr-4 bg-[#ff9b05] text-white rounded-xl shadow-lg">SUBMIT
             <i class="fa-solid fa-download fa-fade" style="--fa-animation-duration: 2s; --fa-fade-opacity: 0.6;"></i>
         </button>
         <p id="response"></p>
